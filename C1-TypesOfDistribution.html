@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Stats Cafe | Interactive Distribution Guide</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #fbbf24; /* Coffee Gold */
+            --text: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 { color: var(--accent); font-size: 2.5rem; margin-bottom: 0.5rem; }
+        p.subtitle { color: var(--text-dim); font-size: 1.1rem; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid #334155;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .dist-name {
+            color: var(--accent);
+            font-size: 1.4rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .scenario-pill {
+            background: #334155;
+            color: var(--accent);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
+
+        .details {
+            margin-top: 1rem;
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.4s ease;
+        }
+
+        .card.active .details {
+            display: block;
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: var(--accent);
+            margin-top: 10px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hint {
+            text-align: center;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>☕ The Stats Cafe</h1>
+    <p class="subtitle">Click a card to master the distributions of your business.</p>
+</header>
+
+<p class="hint">Tap on any card to see the Why, When, and How.</p>
+
+<div class="grid">
+    <div class="card" onclick="this.classList.toggle('active')">
+        <div class="dist-name">Bernoulli <span>🎯</span></div>
+        <div class="scenario-pill">The "Single Passerby"</div>
+        <div class="details">
+            <div class="section-title">What is it?</div>
+            <p>A binary outcome: Success (1) or Failure (0).</p>
+            <div class="section-title">Why use it?</div>
+            <p>To model individual yes/no events before they happen.</p>
+            <div class="section-title">When?</div>
+            <p>When you focus on a single person walking past your door.</p>
+            <div class="section-title">How?</div>
+            <p>Define $p$ (probability they enter). If $p=0.2$, there's a 20% chance they buy.</p>
+        </div>
+    </div>
+
+    <div class="card" onclick="this.classList.toggle('active')">
+        <div class="dist-name">Binomial <span>👥</span></div>
+        <div class="scenario-pill">The "Morning Rush Group"</div>
+        <div class="details">
+            <div class="section-title">What is it?</div>
+            <p>Sum of multiple independent Bernoulli trials.</p>
+            <div class="section-title">Why use it?</div>
+            <p>To predict outcomes for a fixed-size group of people.</p>
+            <div class="section-title">When?</div>
+            <p>When 50 people walk by and you need to know how many might come in.</p>
+            <div class="section-title">How?</div>
+            <p>Use number of trials ($n$) and probability ($p$) to find the likely "count."</p>
+        </div>
+    </div>
+
+    <div class="card" onclick="this.classList.toggle('active')">
+        <div class="dist-name">Poisson <span>🕒</span></div>
+        <div class="scenario-pill">The "Hourly Traffic"</div>
+        <div class="details">
+            <div class="section-title">What is it?</div>
+            <p>Frequency of events over a continuous interval (time).</p>
+            <div class="section-title">Why use it?</div>
+            <p>To manage staffing levels for unpredictable arrivals.</p>
+            <div class="section-title">When?</div>
+            <p>When you want to know the chance of 100 people arriving between 8 AM - 9 AM.</p>
+            <div class="section-title">How?</div>
+            <p>Based on your historical average ($\lambda$). If you average 40/hr, what's the chance of 60?</p>
+        </div>
+    </div>
+
+    <div class="card" onclick="this.classList.toggle('active')">
+        <div class="dist-name">Normal <span>⚖️</span></div>
+        <div class="scenario-pill">The "Consistent Cup"</div>
+        <div class="details">
+            <div class="section-title">What is it?</div>
+            <p>The Bell Curve. Symmetric data clustered around a mean.</p>
+            <div class="section-title">Why use it?</div>
+            <p>For Quality Control and predicting natural variations.</p>
+            <div class="section-title">When?</div>
+            <p>When measuring the exact weight of coffee beans in every bag.</p>
+            <div class="section-title">How?</div>
+            <p>Use the Mean ($\mu$) and Standard Deviation ($\sigma$) to see if a bag is "too light."</p>
+        </div>
+    </div>
+
+    <div class="card" onclick="this.classList.toggle('active')">
+        <div class="dist-name">Exponential <span>⏳</span></div>
+        <div class="scenario-pill">The "Wait Time"</div>
+        <div class="details">
+            <div class="section-title">What is it?</div>
+            <p>The time between independent events.</p>
+            <div class="section-title">Why use it?</div>
+            <p>To optimize workflow and customer experience.</p>
+            <div class="section-title">When?</div>
+            <p>When the barista asks: "How long until I have to make the next latte?"</p>
+            <div class="section-title">How?</div>
+            <p>Calculates the probability that the "gap" between customers is $> 5$ minutes.</p>
+        </div>
+    </div>
+
+    <div class="card" onclick="this.classList.toggle('active')">
+        <div class="dist-name">Uniform <span>📏</span></div>
+        <div class="scenario-pill">The "Lunch Window"</div>
+        <div class="details">
+            <div class="section-title">What is it?</div>
+            <p>Every outcome in a range has the exact same probability.</p>
+            <div class="section-title">Why use it?</div>
+            <p>When there is no clear peak or "popular" time in a window.</p>
+            <div class="section-title">When?</div>
+            <p>A supplier says they will deliver milk "between 1 PM and 4 PM."</p>
+            <div class="section-title">How?</div>
+            <p>The probability is spread flat across the entire time range.</p>
+        </div>
+    </div>
+</div>
+
+<footer style="text-align: center; margin-top: 4rem; color: var(--text-dim); font-size: 0.9rem;">
+    Powered by Probability & Caffeine.
+</footer>
+
+</body>
+</html>
