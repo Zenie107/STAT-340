@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Data-Driven Barista: STAT 340 Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: 'Quicksand', sans-serif; background-color: #fdfaf6; color: #3e2723; }
+        h1, h2, h3 { font-family: 'Fredoka One', cursive; color: #5d4037; }
+        .coffee-card { border-radius: 20px; border: 2px solid #e7d8c9; transition: all 0.3s ease; background: white; margin-bottom: 2rem; }
+        .logic-tag { background: #efebe9; color: #5d4037; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; text-transform: uppercase; }
+        .barista-note { background: #fff8e1; border-left: 4px solid #ffb300; padding: 12px; margin-top: 10px; font-size: 0.9rem; }
+        .textbook-panel { display: none; background: #f8fafc; border-radius: 12px; padding: 20px; margin-top: 15px; border: 1px solid #cbd5e1; }
+        .theory-btn { font-size: 0.75rem; border: 1px solid #5d4037; color: #5d4037; padding: 6px 16px; border-radius: 999px; cursor: pointer; font-weight: 600; }
+        .theory-btn:hover { background: #5d4037; color: white; }
+        .math-display { font-size: 1.3rem; padding: 15px 0; color: #1e293b; text-align: center; }
+        .variable-list { border-left: 2px solid #cbd5e1; padding-left: 15px; margin-top: 10px; font-size: 0.9rem; line-height: 1.6; }
+        .boundary-label { color: #d97706; font-weight: 800; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+
+    <header class="text-center mb-16">
+        <h1 class="text-5xl mb-4">☕ The Data-Driven Barista</h1>
+        <p class="text-xl text-stone-600">Bridging the gap between the counter and the textbook.</p>
+    </header>
+
+    <div class="max-w-4xl mx-auto">
+
+        <section class="coffee-card p-8 border-l-8 border-l-blue-400">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h2 class="text-3xl">💻 Simulation (Monte Carlo)</h2>
+                    <p class="text-sm text-stone-500 italic">"What could happen tomorrow?"</p>
+                </div>
+                <button onclick="toggleT('t-sim')" class="theory-btn">Textbook View</button>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-3">
+                    <p><span class="logic-tag">Reality</span> You know your <b>average</b> is 15 customers/hour. You use the computer to "play out" 1,000 fake hours to see how bad the "rushes" get.</p>
+                    <div class="barista-note">
+                        <strong>The Data:</strong> You feed the model one number: $\lambda = 15$. The computer then generates random outcomes based on that rate.
+                    </div>
+                </div>
+                <div class="bg-blue-50 rounded-xl p-6 text-center border border-blue-100">
+                    <div id="sim-result" class="text-sm font-mono mb-4 bg-white p-2 rounded border h-24 overflow-y-auto">Click to run...</div>
+                    <button onclick="runMonteCarlo()" class="bg-blue-800 text-white px-6 py-2 rounded-lg font-bold w-full">Run 1,000 "Fake" Hours</button>
+                </div>
+            </div>
+
+            <div id="t-sim" class="textbook-panel">
+                <p class="boundary-label">Mathematical Model: Poisson PMF</p>
+                <div class="math-display">$$P(X=k) = \frac{\lambda^k e^{-\lambda}}{k!}$$</div>
+                <div class="variable-list">
+                    <p><b>\(\lambda\) (Lambda)</b>: The average rate (your "known" data: 15/hr).</p>
+                    <p><b>\(k\)</b>: A specific "What if" number of customers (e.g., 25).</p>
+                    <p><b>\(P(X=k)\)</b>: The probability that exactly \(k\) people show up.</p>
+                </div>
+                
+                <div class="mt-4 p-3 bg-blue-100 rounded border-l-4 border-blue-500 text-sm">
+                    <strong>What this number represents:</strong> It tells you the <b>Probability of Failure</b>. If the simulation says there is a 5% chance of $k > 25$, you know you need at least 25 cups ready to be 95% safe.
+                </div>
+            </div>
+        </section>
+
+        <section class="coffee-card p-8 border-l-8 border-l-amber-400">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h2 class="text-3xl">📏 Estimation (Bootstrap)</h2>
+                    <p class="text-sm text-stone-500 italic">"What is the true average?"</p>
+                </div>
+                <button onclick="toggleT('t-est')" class="theory-btn">Textbook View</button>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-3">
+                    <p><span class="logic-tag">Reality</span> You only have data for *3 days*. You don't know the "true" average of the shop. You resample your 3 days over and over to find a safety range.</p>
+                    <div class="barista-note">
+                        <strong>The Data:</strong> Your real samples: [12, 18, 15]. You "bootstrap" by picking from these three numbers (with replacement) to build a distribution.
+                    </div>
+                </div>
+                <div class="bg-amber-50 rounded-xl p-6 text-center border border-amber-100">
+                    <div class="text-xs uppercase text-stone-400 font-bold">Estimated Milk Needed</div>
+                    <p class="text-4xl font-bold text-amber-900 mt-2">15.5 Gal</p>
+                    <p class="text-amber-700 font-bold text-sm">95% CI: [13.2, 17.8]</p>
+                </div>
+            </div>
+
+            <div id="t-est" class="textbook-panel">
+                <p class="boundary-label">Statistical Method: Percentile Bootstrap</p>
+                <div class="math-display">$$CI = [\theta^_{2.5\%}, \theta^_{97.5\%}]$$</div>
+                <div class="variable-list">
+                    <p><b>\(\theta^*\)</b>: The statistic (mean) calculated from a "resampled" data set.</p>
+                    <p><b>\(CI\)</b>: The Confidence Interval (your safety net).</p>
+                </div>
+                
+                <div class="mt-4 p-3 bg-amber-100 rounded border-l-4 border-amber-500 text-sm">
+                    <strong>What this number represents:</strong> It accounts for <b>Sampling Error</b>. It says: "Based on my 3 days of data, I am 95% confident the real long-term average is between 13.2 and 17.8."
+                </div>
+            </div>
+        </section>
+
+        <section class="coffee-card p-8 border-l-8 border-l-stone-500">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h2 class="text-3xl">🔍 EDA (Distribution Analysis)</h2>
+                    <p class="text-sm text-stone-500 italic">"Who are these people?"</p>
+                </div>
+                <button onclick="toggleT('t-eda')" class="theory-btn">Textbook View</button>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-3">
+                    <p><span class="logic-tag">Reality</span> You plot age vs. sugar. You find a "Two-Hump Mystery."</p>
+                    <div class="barista-note">
+                        <strong>The Data:</strong> You have 100 rows of (Age, Sugar). The average is 4 packets, but the plot shows two distinct groups (Teens and Seniors).
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl border p-2"><canvas id="bimodalChart"></canvas></div>
+            </div>
+            <div id="t-eda" class="textbook-panel">
+                <p class="boundary-label">Distribution: Bimodal Mixture</p>
+                <div class="math-display">$$f(x) = w_1 N(\mu_1, \sigma_1) + w_2 N(\mu_2, \sigma_2)$$</div>
+                <div class="variable-list">
+                    <p><b>\(w_1, w_2\)</b>: The weight (how many are young vs. old).</p>
+                    <p><b>\(\mu\)</b>: The average sugar for each hump.</p>
+                </div>
+                
+                <div class="mt-4 p-3 bg-stone-200 rounded border-l-4 border-stone-500 text-sm">
+                    <strong>What this number represents:</strong> It shows that the <b>Population is Heterogeneous</b>. It tells you that your "average" is a lie—you actually have two separate markets to serve.
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        function toggleT(id) {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+            if (window.MathJax) { MathJax.typeset(); }
+        }
+
+        function runMonteCarlo() {
+            const box = document.getElementById('sim-result');
+            box.innerHTML = "Generating 1000 trials...<br>";
+            setTimeout(() => {
+                let results = [];
+                for(let i=0; i<1000; i++) {
+                    // Simulating Poisson-like randomness around 15
+                    results.push(Math.floor(15 + (Math.random() - 0.5) * 10));
+                }
+                const max = Math.max(...results);
+                box.innerHTML = Simulation Complete.<br><b>Expected:</b> 15/hr<br><b>Simulated Max Rush:</b> ${max}/hr<br><b>Recommendation:</b> Staff for ${max} people.;
+            }, 500);
+        }
+
+        new Chart(document.getElementById('bimodalChart'), {
+            type: 'bar',
+            data: {
+                labels: ['18', '25', '35', '45', '55', '65+'],
+                datasets: [{ label: 'Sugar Use', data: [8, 7, 0.5, 0.5, 6, 9], backgroundColor: '#8d6e63' }]
+            },
+            options: { plugins: { legend: { display: false } } }
+        });
+    </script>
+</body>
+</html>
