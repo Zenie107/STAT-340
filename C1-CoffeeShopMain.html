@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Data-Driven Barista</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Quicksand', sans-serif; background-color: #fdfaf6; color: #3e2723; }
+        h1, h2, h3 { font-family: 'Fredoka One', cursive; color: #5d4037; }
+        .coffee-card { border-radius: 20px; border: 2px solid #e7d8c9; transition: all 0.3s ease; }
+        .coffee-card:hover { border-color: #8d6e63; box-shadow: 0 10px 20px rgba(93, 64, 55, 0.1); }
+        .logic-tag { background: #efebe9; color: #5d4037; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; text-transform: uppercase; }
+        .barista-note { background: #fff8e1; border-left: 4px solid #ffb300; padding: 12px; margin-top: 10px; font-size: 0.9rem; }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+
+    <header class="text-center mb-16">
+        <h1 class="text-5xl mb-4">☕ The Data-Driven Barista</h1>
+        <p class="text-xl text-stone-600">Running your shop with science, not just caffeine.</p>
+    </header>
+
+    <div class="max-w-4xl mx-auto space-y-16">
+
+        <section class="coffee-card bg-white p-8">
+            <h2 class="text-3xl mb-4 flex items-center gap-3">🎯 Sampling</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-3">
+                    <p><span class="logic-tag">WHAT</span> Picking 50 customers to represent all 5,000 who visit your shop.</p>
+                    <p><span class="logic-tag">WHY</span> You want to know if people like your new "Lavender Latte," but you can't interview every person in line without causing a traffic jam!</p>
+                    <p><span class="logic-tag">HOW</span> Interviewing every 10th person who walks in, regardless of what they look like.</p>
+                    <p><span class="logic-tag">WHEN</span> Before you commit to buying 50lbs of lavender syrup.</p>
+                    <div class="barista-note">
+                        <strong>The Coffee Problem:</strong> If you only ask people who are already drinking lattes, your sample is <b>biased</b>. You need to ask the black coffee drinkers too!
+                    </div>
+                </div>
+                <div class="bg-stone-100 rounded-xl p-4 text-center">
+                    <div id="sample-dots" class="grid grid-cols-10 gap-2 mb-4"></div>
+                    <button onclick="pickCoffeeSample()" class="bg-amber-800 text-white px-6 py-2 rounded-full font-bold">Pick Test Group</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="coffee-card bg-white p-8">
+            <h2 class="text-3xl mb-4 flex items-center gap-3">🔍 Exploratory Data Analysis (EDA)</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-3">
+                    <p><span class="logic-tag">WHAT</span> Plotting your sales to see the "shape" of your customers.</p>
+                    <p><span class="logic-tag">WHY</span> To see if your "Average Customer" actually exists.</p>
+                    <p><span class="logic-tag">HOW</span> Creating a histogram of <b>Customer Age vs. Sugar Packets</b>.</p>
+                    <p><span class="logic-tag">WHEN</span> When you notice your sugar inventory is disappearing faster than expected.</p>
+                    <div class="barista-note">
+                        <strong>The Coffee Problem:</strong> Your average customer age is 40, but the graph shows two humps: 20-year-olds (syrup fans) and 60-year-olds (black coffee fans). <b>Nobody at age 40 actually comes to your shop!</b>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl">
+                    <canvas id="bimodalChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="coffee-card bg-white p-8">
+            <h2 class="text-3xl mb-4 flex items-center gap-3">📏 Estimation</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-3">
+                    <p><span class="logic-tag">WHAT</span> Guessing the total monthly milk demand based on just one week of data.</p>
+                    <p><span class="logic-tag">WHY</span> You need to order milk from the farm, but you need a "safety margin" so you don't run out.</p>
+                    <p><span class="logic-tag">HOW</span> Calculate your average daily milk use + a <b>Confidence Interval</b> (the +/- range).</p>
+                    <p><span class="logic-tag">WHEN</span> Every Sunday night before placing the supply order.</p>
+                    <div class="barista-note">
+                        <strong>The Coffee Problem:</strong> Don't just order for your "average" day. Order for the "Average + Margin" so that if a sudden group of tourists arrives, you're safe.
+                    </div>
+                </div>
+                <div class="flex flex-col items-center justify-center p-6 bg-stone-50 rounded-xl border-2 border-dashed border-stone-200">
+                    <p class="text-sm font-bold uppercase text-stone-400">Projected Milk Order</p>
+                    <p class="text-4xl font-bold text-amber-900">42 Gallons</p>
+                    <p class="text-stone-500 font-bold">± 4 Gallons</p>
+                    <div class="w-full bg-stone-200 h-2 mt-4 rounded-full relative">
+                        <div class="absolute h-2 bg-amber-600 rounded-full" style="left: 35%; right: 35%;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="coffee-card bg-white p-8">
+            <h2 class="text-3xl mb-4 flex items-center gap-3">🧪 Testing</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-3">
+                    <p><span class="logic-tag">WHAT</span> Checking if your "Free Cookie" promotion actually increased profits.</p>
+                    <p><span class="logic-tag">WHY</span> You made more money today, but was it the cookies? Or was it just a rainy day (which makes people buy more coffee)?</p>
+                    <p><span class="logic-tag">HOW</span> Compare "Cookie Days" to "No Cookie Days" using a <b>P-Value</b>.</p>
+                    <p><span class="logic-tag">WHEN</span> Before you give away 1,000 more free cookies.</p>
+                    <div class="barista-note">
+                        <strong>The Coffee Problem:</strong> If your profit only went up by $2, that's just "noise." If it went up by $200, that's a <b>Statistically Significant</b> signal!
+                    </div>
+                </div>
+                <div class="bg-amber-50 rounded-xl p-6 border border-amber-100 flex flex-col items-center justify-center text-center">
+                    <div id="cookie-status" class="text-5xl mb-4">🍪</div>
+                    <button onclick="testCookies()" class="bg-stone-800 text-white px-6 py-2 rounded-lg font-bold">Simulate Promo Day</button>
+                    <p id="test-result" class="mt-4 font-bold text-amber-900 italic">Is the profit increase real?</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="coffee-card bg-white p-8">
+            <h2 class="text-3xl mb-4 flex items-center gap-3">🔮 Prediction</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-3">
+                    <p><span class="logic-tag">WHAT</span> Using the weather forecast to decide how many muffins to bake.</p>
+                    <p><span class="logic-tag">WHY</span> Baking 100 muffins when only 20 people show up is a waste of money.</p>
+                    <p><span class="logic-tag">HOW</span> Building a model where <b>Temp</b> + <b>Day of Week</b> = <b>Estimated Muffin Sales</b>.</p>
+                    <p><span class="logic-tag">WHEN</span> At 5:00 AM every morning when you turn on the oven.</p>
+                    <div class="barista-note">
+                        <strong>The Coffee Problem:</strong> Prediction turns "I hope we sell these" into "I know we need these."
+                    </div>
+                </div>
+                <div class="bg-stone-800 text-white rounded-xl p-6">
+                    <label class="text-xs uppercase font-bold text-stone-400">Forecasted Weather</label>
+                    <select id="muffin-weather" class="w-full bg-stone-700 p-2 mt-1 rounded border border-stone-600 mb-4" onchange="predictMuffins()">
+                        <option value="cold">Freezing (People want muffins!)</option>
+                        <option value="warm">Perfect (Average day)</option>
+                        <option value="hot">Scorching (No one wants food)</option>
+                    </select>
+                    <p class="text-xs uppercase font-bold text-stone-400">Bake Exactly:</p>
+                    <p id="muffin-count" class="text-5xl font-bold text-amber-400">85</p>
+                    <p class="text-xs mt-1 text-stone-400">Muffins for tomorrow</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="text-center py-20 text-stone-400">
+        <p>Data Science: Turning "Gut Feelings" into "Good Business."</p>
+    </footer>
+
+    <script>
+        // --- 1. SAMPLING SCRIPT ---
+        const sGrid = document.getElementById('sample-dots');
+        for(let i=0; i<40; i++) {
+            const d = document.createElement('div');
+            d.className = "h-3 w-3 rounded-full bg-stone-300 sample-dot";
+            sGrid.appendChild(d);
+        }
+        function pickCoffeeSample() {
+            const dots = document.querySelectorAll('.sample-dot');
+            dots.forEach(d => { d.style.background = "#d6d3d1"; d.style.transform = "scale(1)"; });
+            for(let i=0; i<8; i++) {
+                const r = Math.floor(Math.random()*40);
+                dots[r].style.background = "#78350f";
+                dots[r].style.transform = "scale(1.3)";
+            }
+        }
+
+        // --- 2. EDA CHART (BIMODAL) ---
+        new Chart(document.getElementById('bimodalChart'), {
+            type: 'bar',
+            data: {
+                labels: ['18', '25', '35', '45', '55', '65+'],
+                datasets: [{
+                    label: 'Sugar Packets Used',
+                    data: [8, 7, 2, 1, 6, 8], // The bimodal shape
+                    backgroundColor: '#8d6e63',
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                scales: {
+                    y: { title: { display: true, text: 'Avg Sugar Packets' }, min: 0 },
+                    x: { title: { display: true, text: 'Customer Age' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // --- 4. TESTING SCRIPT ---
+        function testCookies() {
+            const res = document.getElementById('test-result');
+            const chance = Math.random();
+            if(chance > 0.5) {
+                res.innerText = "Significant! Sales jump was $150. Keep the cookies!";
+                res.style.color = "#15803d";
+            } else {
+                res.innerText = "Not Significant. Sales only moved $5. It was just a fluke.";
+                res.style.color = "#b91c1c";
+            }
+        }
+
+        // --- 5. PREDICTION SCRIPT ---
+        function predictMuffins() {
+            const w = document.getElementById('muffin-weather').value;
+            const el = document.getElementById('muffin-count');
+            if(w === 'cold') el.innerText = "120";
+            else if(w === 'warm') el.innerText = "85";
+            else el.innerText = "30";
+        }
+    </script>
+</body>
+</html>
